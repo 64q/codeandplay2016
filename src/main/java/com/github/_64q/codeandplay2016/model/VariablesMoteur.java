@@ -1,20 +1,31 @@
 package com.github._64q.codeandplay2016.model;
 
+/**
+ * Variables du moteur de jeu
+ * 
+ * @author qlebourgeois &lt;contact@qlebourgeois.me&gt;
+ */
 public class VariablesMoteur {
-  private String nom;
+  private String nomEquipe;
   private String idEquipe;
   private String idPartie;
 
+  /**
+   * Plateau de jeu, refresh a chaque fois que l'on doit jouer
+   */
   private Plateau plateau;
 
+  /**
+   * Dernier mouvement renvoyé par l'API (celui de l'adversaire)
+   */
   private Mouvement dernierMouvement;
 
-  public String getNom() {
-    return this.nom;
+  public String getNomEquipe() {
+    return this.nomEquipe;
   }
 
-  public void setNom(String nom) {
-    this.nom = nom;
+  public void setNomEquipe(String nom) {
+    this.nomEquipe = nom;
   }
 
   public String getIdEquipe() {

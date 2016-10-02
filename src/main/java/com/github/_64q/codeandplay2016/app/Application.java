@@ -25,31 +25,37 @@ public class Application {
 
   // --- Paramètres de partie
 
-  public static final String NOM = "O(k)";
+  public static final String NOM_EQUIPE = "O(k)";
 
   public static final String MOT_DE_PASSE = "TEsOk!TEsBath!TEsIN!";
 
   public static final ModeJeu MODE = ModeJeu.PRACTICE;
 
-  public static final String LEVEL = "5";
+  public static final int LEVEL = 5;
 
-  // --- Ctx
+  // --- Contexte spring
 
   private static AnnotationConfigApplicationContext context;
 
   /**
-   * @param args
+   * Point d'entrée du bot de la battle code
+   * 
+   * @param args pas d'arguments à renseigner
    */
   public static void main(String[] args) {
-    context = new AnnotationConfigApplicationContext("com.github._64q.codeandplay2016");
-    
-    intro();
+    // etape 1 : chargement du contexte spring depuis les packages du soft
+    loadSpring();
+
+    // etape 2 : affichage du lancement
+    printIntroduction();
+
+    // etape 3 : vérification de la connectivité avec le serveur de jeu
     checkConnexion();
 
-    MoteurJeu moteur = context.getBean(MoteurJeu.class);
+    // etape 4 : initialisation du moteur
+    MoteurJeu moteur = initializeMoteur();
 
-    moteur.initialize(NOM, MOT_DE_PASSE);
-
+    // etape 5 : place au jeu !
     if (MODE == ModeJeu.PRACTICE) {
       LOG.info("Lancement d'une partie en practice de niveau [ {} ]", LEVEL);
 
@@ -63,20 +69,47 @@ public class Application {
 
       System.exit(254);
     }
-    
-    LOG.info(" --> Fin de l'exécution du bot");
-    
-    context.close();
 
+    // etape 6 : arrêt du bot
+    LOG.info("Fin de l'exécution du bot");
+    unloadSpring();
     System.exit(0);
   }
 
-  private static void intro() {
-    LOG.info(" --> Nom équipe: {}", NOM);
-    LOG.info(" --> Mode: {}", MODE);
-    LOG.info(" --> LEVEL: {}", LEVEL);
+  /**
+   * Initialise le moteur de jeu
+   * 
+   * @return le {@link MoteurJeu}
+   */
+  private static MoteurJeu initializeMoteur() {
+    MoteurJeu moteur = context.getBean(MoteurJeu.class);
+
+    moteur.initialize(NOM_EQUIPE, MOT_DE_PASSE);
+
+    return moteur;
   }
 
+  /**
+   * Charge le contexte spring
+   */
+  private static void loadSpring() {
+    context = new AnnotationConfigApplicationContext(
+        // serivces
+        "com.github._64q.codeandplay2016.service",
+        // intelligences artificielles
+        "com.github._64q.codeandplay2016.intelligence");
+  }
+
+  /**
+   * Décharge le contexte spring
+   */
+  private static void unloadSpring() {
+    context.close();
+  }
+
+  /**
+   * Vérifie que la connexion est OK
+   */
   private static void checkConnexion() {
     String pong = context.getBean(RestClient.class).ping();
 
@@ -87,6 +120,16 @@ public class Application {
     }
 
     LOG.info(" --> Test de connectivité OK [ {} ]", pong);
+  }
+
+  /**
+   * Affiche les paramètres du bot au lancement
+   */
+  private static void printIntroduction() {
+    LOG.info("Battle Code IA de l'équipe [ {} ]", NOM_EQUIPE);
+    LOG.info(" --> Nom équipe: {}", NOM_EQUIPE);
+    LOG.info(" --> Mode: {}", MODE);
+    LOG.info(" --> LEVEL: {}", LEVEL);
   }
 
 }

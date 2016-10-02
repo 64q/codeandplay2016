@@ -9,16 +9,16 @@ import org.springframework.stereotype.Service;
 
 import com.github._64q.codeandplay2016.app.Application;
 import com.github._64q.codeandplay2016.exception.ReponseInvalideException;
-import com.github._64q.codeandplay2016.model.EtatPartie;
+import com.github._64q.codeandplay2016.model.Erreur;
 import com.github._64q.codeandplay2016.model.EtatMouvement;
+import com.github._64q.codeandplay2016.model.EtatPartie;
 import com.github._64q.codeandplay2016.model.Mouvement;
 import com.github._64q.codeandplay2016.model.Plateau;
-import com.github._64q.codeandplay2016.model.Erreur;
 import com.github._64q.codeandplay2016.rest_interface.DuelResource;
 import com.github._64q.codeandplay2016.util.JsonUtils;
 
 /**
- * Client REST
+ * Client REST pour communiquer avec la battle
  * 
  * @author qlebourgeois &lt;contact@qlebourgeois.me&gt;
  */
@@ -27,6 +27,9 @@ public class RestClient {
 
   /** Logger */
   private static final Logger LOG = LoggerFactory.getLogger(RestClient.class);
+
+  /** Durée de pause pour chaque appel à l'API */
+  private static final long PAUSE = 200;
 
   /**
    * Client HTTP
@@ -39,7 +42,7 @@ public class RestClient {
    */
   private void pause() {
     try {
-      Thread.sleep(200);
+      Thread.sleep(PAUSE);
     } catch (InterruptedException e) {
       LOG.trace("Impossible de mettre en pause", e);
     }
@@ -47,8 +50,7 @@ public class RestClient {
 
   private Response analyze(Response response) {
     if (response.getStatus() == 406) {
-      Erreur objet =
-          JsonUtils.fromJson(response.readEntity(String.class), Erreur.class);
+      Erreur objet = JsonUtils.fromJson(response.readEntity(String.class), Erreur.class);
 
       LOG.error("ErreurCode: {}, Message: {}", objet.getClasse(), objet.getMessage());
 
@@ -93,6 +95,16 @@ public class RestClient {
   }
 
   /**
+   * Création d'un versus
+   * 
+   * @param idEquipe
+   * @return
+   */
+  public String newVersus(String idEquipe) {
+    return analyze(RESOURCE.getNextGame(idEquipe)).readEntity(String.class);
+  }
+
+  /**
    * Retourne l'état courant de la partie
    * 
    * @param idPartie
@@ -100,9 +112,10 @@ public class RestClient {
    * @return
    */
   public EtatPartie getStatus(String idPartie, String idEquipe) {
-    return EtatPartie.valueOf(analyze(RESOURCE.getStatus(idPartie, idEquipe)).readEntity(String.class));
+    return EtatPartie
+        .valueOf(analyze(RESOURCE.getStatus(idPartie, idEquipe)).readEntity(String.class));
   }
-  
+
   /**
    * Récupère le plateau de jeu
    * 
@@ -110,9 +123,10 @@ public class RestClient {
    * @return
    */
   public Plateau getBoard(String idPartie) {
-    return JsonUtils.fromJson(analyze(RESOURCE.getBoard(idPartie, "JSON")).readEntity(String.class), Plateau.class);
+    return JsonUtils.fromJson(analyze(RESOURCE.getBoard(idPartie, "JSON")).readEntity(String.class),
+        Plateau.class);
   }
-  
+
   /**
    * Récupère le dernier mouvement effectué
    * 
@@ -124,7 +138,7 @@ public class RestClient {
     return Mouvement
         .valueOf(analyze(RESOURCE.getLastMove(idPartie, idEquipe)).readEntity(String.class));
   }
-  
+
   /**
    * Effectue un mouvement
    * 
@@ -134,6 +148,7 @@ public class RestClient {
    * @return
    */
   public EtatMouvement makeMove(String idPartie, String idEquipe, Mouvement mouvement) {
-    return EtatMouvement.valueOf(analyze(RESOURCE.makeMove(idPartie, mouvement.name(), idEquipe)).readEntity(String.class));
+    return EtatMouvement.valueOf(
+        analyze(RESOURCE.makeMove(idPartie, mouvement.name(), idEquipe)).readEntity(String.class));
   }
 }

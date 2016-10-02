@@ -1,4 +1,4 @@
-package com.github._64q.codeandplay2016.ia;
+package com.github._64q.codeandplay2016.intelligence;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,7 @@ public class SimpleIntelligenceArtificielle implements IntelligenceArtificielle 
   private Mouvement avantDernierMouvement;
 
   private Joueur getNous(VariablesMoteur variables) {
-    if (variables.getNom().equals(variables.getPlateau().getPlayer1().getName())) {
+    if (variables.getNomEquipe().equals(variables.getPlateau().getPlayer1().getName())) {
       return variables.getPlateau().getPlayer1();
     }
 
@@ -26,7 +26,7 @@ public class SimpleIntelligenceArtificielle implements IntelligenceArtificielle 
   }
 
   private Joueur getAdversaire(VariablesMoteur variables) {
-    if (!variables.getNom().equals(variables.getPlateau().getPlayer1().getName())) {
+    if (!variables.getNomEquipe().equals(variables.getPlateau().getPlayer1().getName())) {
       return variables.getPlateau().getPlayer1();
     }
 
@@ -39,14 +39,17 @@ public class SimpleIntelligenceArtificielle implements IntelligenceArtificielle 
 
     Joueur nous = getNous(variables);
     Joueur adversaire = getAdversaire(variables);
-    
+
     dernierMouvement = variables.getDernierMouvement();
-    
+
     LOG.trace("Avant dernier: {}, dernier: {}", avantDernierMouvement, dernierMouvement);
-    
-    if (nous.getHealth() > 5 && nous.getBullet() > 0 && !nous.isFocused()) {
+
+    if (avantDernierMouvement == Mouvement.BOMB && nous.getShield() > 0) {
+      mouvement = Mouvement.COVER;
+    } else if (nous.getHealth() > 5 && nous.getBullet() > 0 && !nous.isFocused()
+        && adversaire.getBullet() < 1) {
       mouvement = Mouvement.AIM;
-    } else if (nous.getBomb() > 0 && adversaire.getBullet() < 1 && adversaire.getShield() < 1) {
+    } else if (nous.getBomb() > 0 && adversaire.getBullet() < 1) {
       mouvement = Mouvement.BOMB;
     } else if (dernierMouvement == Mouvement.AIM && nous.getShield() > 1) {
       mouvement = Mouvement.COVER;
@@ -55,7 +58,11 @@ public class SimpleIntelligenceArtificielle implements IntelligenceArtificielle 
     } else if (nous.getBullet() > 0 && adversaire.getBomb() > 0 && adversaire.getShield() < 1) {
       mouvement = Mouvement.SHOOT;
     } else {
-      mouvement = Mouvement.AIM;
+      if (nous.isFocused()) {
+        mouvement = Mouvement.SHOOT;
+      } else {
+        mouvement = Mouvement.AIM;
+      }
     }
 
     avantDernierMouvement = dernierMouvement;

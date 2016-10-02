@@ -1,4 +1,4 @@
-package com.github._64q.codeandplay2016.ia;
+package com.github._64q.codeandplay2016.intelligence;
 
 import org.springframework.stereotype.Component;
 
@@ -16,7 +16,7 @@ public interface IntelligenceArtificielle {
    * Joue le prochain coup
    * 
    * @param variables etat du moteur
-   * @return
+   * @return le mouvement à jouer
    */
   public Mouvement makeMove(VariablesMoteur variables);
 }
