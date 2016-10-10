@@ -34,6 +34,11 @@ public class MoteurJeu {
    */
   public static final int NB_TOURS_MAX = 30;
 
+  /**
+   * Temps d'attente dans un tour vide en ms
+   */
+  public static final int TEMPS_ENTRE_STATUT = 200;
+
   // --- Services
 
   /**
@@ -127,32 +132,43 @@ public class MoteurJeu {
    * Boucle principale d'exécution du jeu
    */
   protected void loop() {
-    EtatPartie etat = client.getStatus(variables.getIdPartie(), variables.getIdEquipe());
-
-    switch (etat) {
-      case CANCELLED:
-        performCancelled();
-        break;
-      case DEFEAT:
-        performDefeat();
-        break;
-      case VICTORY:
-        performVictory();
-        break;
-      case CANPLAY:
-        play();
-        break;
-      case CANTPLAY:
-      default:
-        LOG.info("En attente de pouvoir jouer");
-        loop();
-    }
+    EtatPartie etat;
+    do {
+      etat = client.getStatus(variables.getIdPartie(), variables.getIdEquipe());
+  
+      // Pas de default : cache le warning indiquant qu'il manque un état dans le switch
+      switch (etat) {
+        case CANCELLED:
+          performCancelled();
+          break;
+          
+        case DEFEAT:
+          performDefeat();
+          break;
+          
+        case VICTORY:
+          performVictory();
+          break;
+          
+        case CANPLAY:
+          play();
+          // On ignore le résultat, on tente de continuer (au pire il y aura DEFEAT)
+          // if(!play()) etat = DEFEAT;
+          break;
+          
+        case CANTPLAY:
+          LOG.info("En attente de pouvoir jouer");
+          waitBeforeNextLoop();
+          break;
+      }
+    } while(!etat.isFinal());
   }
 
   /**
    * Joue un coup
+   * @return false si on a perdu la partie sur ce coup
    */
-  private void play() {
+  private boolean play() {
     Plateau plateau = client.getBoard(variables.getIdPartie());
     Mouvement dernierMouvement =
         client.getLastMovement(variables.getIdPartie(), variables.getIdEquipe());
@@ -169,21 +185,23 @@ public class MoteurJeu {
     switch (etat) {
       case OK:
         LOG.info(" --> Mouvement :\t\t\t{}", prochainMouvement);
-        loop();
-        break;
+        return true;
+        
+      case NOTYET:
+        LOG.info(" --> Pas encore notre tour");
+        return true;
+        
       case FORBIDDEN:
         LOG.info(" --> Mouvement interdit:\t\t{}", prochainMouvement);
-        performDefeat();
-        break;
+        return false;
+        
       case GAMEOVER:
         LOG.info(" --> Défaite sur mouvement:\t\t{}", prochainMouvement);
-        performDefeat();
-        break;
-      case NOTYET:
-      default:
-        LOG.info(" --> Pas encore notre tour");
-        loop();
+        return false;
     }
+    
+    //Retourne Ok par défaut, évite de planter le jeu si jamais il y a un bug ici
+    return true;
 
   }
 
@@ -197,5 +215,13 @@ public class MoteurJeu {
 
   protected void performCancelled() {
     LOG.info(" ----> Partie annulée");
+  }
+  
+  private void waitBeforeNextLoop() {
+    try {
+      Thread.sleep(TEMPS_ENTRE_STATUT);
+    } catch (InterruptedException e) {
+      // Ignorer l'exception
+    }
   }
 }
