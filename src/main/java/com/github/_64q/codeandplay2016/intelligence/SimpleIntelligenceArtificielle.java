@@ -40,7 +40,7 @@ public class SimpleIntelligenceArtificielle implements IntelligenceArtificielle 
     Joueur nous = getNous(variables);
     Joueur adversaire = getAdversaire(variables);
 
-    dernierMouvement = variables.getDernierMouvement();
+    dernierMouvement = variables.getMouvementAdversaire();
 
     LOG.trace("Avant dernier: {}, dernier: {}", avantDernierMouvement, dernierMouvement);
 

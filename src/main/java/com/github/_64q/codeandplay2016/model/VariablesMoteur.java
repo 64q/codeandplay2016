@@ -18,7 +18,9 @@ public class VariablesMoteur {
   /**
    * Dernier mouvement renvoyé par l'API (celui de l'adversaire)
    */
-  private Mouvement dernierMouvement;
+  private Mouvement mouvementAdversaire;
+  
+  private Mouvement mouvementNous;
 
   public String getNomEquipe() {
     return this.nomEquipe;
@@ -52,11 +54,36 @@ public class VariablesMoteur {
     this.idPartie = idPartie;
   }
 
-  public Mouvement getDernierMouvement() {
-    return this.dernierMouvement;
+  public Mouvement getMouvementAdversaire() {
+    return this.mouvementAdversaire;
   }
 
-  public void setDernierMouvement(Mouvement dernierMouvement) {
-    this.dernierMouvement = dernierMouvement;
+  public void setMouvementAdversaire(Mouvement mouvementAdversaire) {
+    this.mouvementAdversaire = mouvementAdversaire;
+  }
+
+  public Mouvement getMouvementNous() {
+    return this.mouvementNous;
+  }
+
+  public void setMouvementNous(Mouvement mouvementNous) {
+    this.mouvementNous = mouvementNous;
+  }
+
+
+  public Joueur getNous() {
+    if (getNomEquipe().equals(getPlateau().getPlayer1().getName())) {
+      return getPlateau().getPlayer1();
+    }
+
+    return getPlateau().getPlayer2();
+  }
+
+  public Joueur getAdversaire() {
+    if (!getNomEquipe().equals(getPlateau().getPlayer1().getName())) {
+      return getPlateau().getPlayer1();
+    }
+
+    return getPlateau().getPlayer2();
   }
 }
