@@ -188,7 +188,6 @@ public class MoteurJeu {
 
     switch (etat) {
       case OK:
-        //LOG.info(" --> Mouvement :\t\t\t{}", prochainMouvement);
         return true;
         
       case NOTYET:
