@@ -136,7 +136,6 @@ public class MoteurJeu {
     do {
       etat = client.getStatus(variables.getIdPartie(), variables.getIdEquipe());
   
-      // Pas de default : cache le warning indiquant qu'il manque un état dans le switch
       switch (etat) {
         case CANCELLED:
           performCancelled();
@@ -158,8 +157,10 @@ public class MoteurJeu {
           
         case CANTPLAY:
           LOG.info("En attente de pouvoir jouer");
-          waitBeforeNextLoop();
           break;
+          
+        default:
+            throw new IllegalStateException("Unhandled status : " + etat.name());
       }
     } while(!etat.isFinal());
   }
@@ -215,13 +216,5 @@ public class MoteurJeu {
 
   protected void performCancelled() {
     LOG.info(" ----> Partie annulée");
-  }
-  
-  private void waitBeforeNextLoop() {
-    try {
-      Thread.sleep(TEMPS_ENTRE_STATUT);
-    } catch (InterruptedException e) {
-      // Ignorer l'exception
-    }
   }
 }
