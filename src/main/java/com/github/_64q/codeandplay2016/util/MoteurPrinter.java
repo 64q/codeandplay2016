@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github._64q.codeandplay2016.model.Joueur;
+import com.github._64q.codeandplay2016.model.Mouvement;
 import com.github._64q.codeandplay2016.model.Plateau;
 import com.github._64q.codeandplay2016.model.VariablesMoteur;
 import com.github._64q.codeandplay2016.service.MoteurJeu;
@@ -21,7 +22,6 @@ public class MoteurPrinter {
 
   public static void printVariablesMoteur(VariablesMoteur variables) {
     printNouveauTour(variables);
-    printDernierMouvement(variables);
     printPlateau(variables);
   }
 
@@ -30,23 +30,28 @@ public class MoteurPrinter {
         MoteurJeu.NB_TOURS_MAX - variables.getPlateau().getNbrActionLeft());
   }
 
-  public static void printDernierMouvement(VariablesMoteur variables) {
-    LOG.info(" --> Mouvement adversaire :\t{}", variables.getDernierMouvement());
+  public static void printMouvementAdversaire(VariablesMoteur variables) {
+    LOG.info(" --> Mouvement adversaire :\t{}", variables.getMouvementAdversaire());
   }
 
   public static void printPlateau(VariablesMoteur variables) {
     Plateau plateau = variables.getPlateau();
 
-    LOG.info("+------------------------------ Plateau --------------------------------------+");
-    printPlayer(plateau.getPlayer1());
-    printPlayer(plateau.getPlayer2());
+    //LOG.info("+------------------------------ Plateau --------------------------------------+");
+    if(variables.getNous() == variables.getPlateau().getPlayer1()) {
+      printPlayer(variables.getNous(), variables.getMouvementNous());
+      printPlayer(variables.getAdversaire(), variables.getMouvementAdversaire());
+    } else {
+      printPlayer(variables.getAdversaire(), variables.getMouvementAdversaire());
+      printPlayer(variables.getNous(), variables.getMouvementNous());
+    }
     LOG.info("| Nombre de tours restants:\t{}", plateau.getNbrActionLeft());
-    LOG.info("+---------------------------- Fin Plateau ------------------------------------+");
+    LOG.info("+-----------------------------------------------------------------------------+");
   }
 
-  private static void printPlayer(Joueur player) {
-    LOG.info("| Joueur1 {} :\tPV:{},\tBalles:{},\tShields:{},\tFocus:{},\tBomb:{}",
+  private static void printPlayer(Joueur player, Mouvement mouvement) {
+    LOG.info("| Joueur {} :\tPV:{},\tBalles:{},\tShields:{},\tFocus:{},\tBomb:{}   <= {}",
         StringUtils.substring(player.getName(), 0, 4), player.getHealth(), player.getBullet(),
-        player.getShield(), player.isFocused(), player.getBomb());
+        player.getShield(), player.isFocused(), player.getBomb(), mouvement);
   }
 }

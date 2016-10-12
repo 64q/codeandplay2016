@@ -34,11 +34,6 @@ public class MoteurJeu {
    */
   public static final int NB_TOURS_MAX = 30;
 
-  /**
-   * Temps d'attente dans un tour vide en ms
-   */
-  public static final int TEMPS_ENTRE_STATUT = 200;
-
   // --- Services
 
   /**
@@ -163,6 +158,7 @@ public class MoteurJeu {
             throw new IllegalStateException("Unhandled status : " + etat.name());
       }
     } while(!etat.isFinal());
+    updatePlateau();
   }
 
   /**
@@ -175,17 +171,18 @@ public class MoteurJeu {
         client.getLastMovement(variables.getIdPartie(), variables.getIdEquipe());
 
     variables.setPlateau(plateau);
-    variables.setDernierMouvement(dernierMouvement);
+    variables.setMouvementAdversaire(dernierMouvement);
 
     MoteurPrinter.printVariablesMoteur(variables);
 
     Mouvement prochainMouvement = intelligence.makeMove(variables);
     EtatMouvement etat =
         client.makeMove(variables.getIdPartie(), variables.getIdEquipe(), prochainMouvement);
+    variables.setMouvementNous(prochainMouvement);
+    
 
     switch (etat) {
       case OK:
-        LOG.info(" --> Mouvement :\t\t\t{}", prochainMouvement);
         return true;
         
       case NOTYET:
@@ -204,6 +201,17 @@ public class MoteurJeu {
     //Retourne Ok par défaut, évite de planter le jeu si jamais il y a un bug ici
     return true;
 
+  }
+  private void updatePlateau() {
+    Plateau plateau = client.getBoard(variables.getIdPartie());
+
+    variables.setPlateau(plateau);
+    
+    Mouvement mouvementAdversaire =
+        client.getLastMovement(variables.getIdPartie(), variables.getIdEquipe());
+    variables.setMouvementAdversaire(mouvementAdversaire);
+
+    MoteurPrinter.printVariablesMoteur(variables);
   }
 
   protected void performVictory() {
