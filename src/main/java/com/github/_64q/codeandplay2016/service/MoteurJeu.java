@@ -34,11 +34,6 @@ public class MoteurJeu {
    */
   public static final int NB_TOURS_MAX = 30;
 
-  /**
-   * Temps d'attente dans un tour vide en ms
-   */
-  public static final int TEMPS_ENTRE_STATUT = 200;
-
   // --- Services
 
   /**
