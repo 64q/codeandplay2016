@@ -18,7 +18,7 @@ import com.github._64q.codeandplay2016.util.MoteurPrinter;
 
 /**
  * Moteur de jeu
- * 
+ *
  * @author qlebourgeois &lt;contact@qlebourgeois.me&gt;
  */
 @Service
@@ -32,7 +32,7 @@ public class MoteurJeu {
   /**
    * Nombre tours max du jeu
    */
-  public static final int NB_TOURS_MAX = 30;
+  public static final int NB_TOURS_MAX = 53;
 
   // --- Services
 
@@ -44,7 +44,7 @@ public class MoteurJeu {
 
   /**
    * IA du jeu
-   * 
+   *
    * <p>
    * Changer le qualifier pour faire jouer une autre IA enregistrée en tant que bean spring
    */
@@ -61,7 +61,7 @@ public class MoteurJeu {
 
   /**
    * Initialise le moteur de jeu
-   * 
+   *
    * @param nomEquipe
    * @param motDePasse
    * @param mode
@@ -85,7 +85,7 @@ public class MoteurJeu {
 
   /**
    * Lance la partie en practice
-   * 
+   *
    * @param mode
    * @param level
    */
@@ -105,7 +105,7 @@ public class MoteurJeu {
 
   /**
    * Lance la partie en versus
-   * 
+   *
    * @param mode
    * @param level
    */
@@ -130,43 +130,44 @@ public class MoteurJeu {
     EtatPartie etat;
     do {
       etat = client.getStatus(variables.getIdPartie(), variables.getIdEquipe());
-  
+
       switch (etat) {
         case CANCELLED:
           performCancelled();
           break;
-          
+
         case DEFEAT:
           performDefeat();
           break;
-          
+
         case VICTORY:
           performVictory();
           break;
-          
+
         case CANPLAY:
           play();
           // On ignore le résultat, on tente de continuer (au pire il y aura DEFEAT)
           // if(!play()) etat = DEFEAT;
           break;
-          
+
         case CANTPLAY:
           LOG.info("En attente de pouvoir jouer");
           break;
-          
+
         default:
-            throw new IllegalStateException("Unhandled status : " + etat.name());
+          throw new IllegalStateException("Unhandled status : " + etat.name());
       }
-    } while(!etat.isFinal());
+    } while (!etat.isFinal());
     updatePlateau();
   }
 
   /**
    * Joue un coup
+   *
    * @return false si on a perdu la partie sur ce coup
    */
   private boolean play() {
-    Plateau plateau = client.getBoard(variables.getIdPartie());
+    Plateau plateau = client.getBoard(variables.getIdPartie(), variables.getIdEquipe());
     Mouvement dernierMouvement =
         client.getLastMovement(variables.getIdPartie(), variables.getIdEquipe());
 
@@ -179,34 +180,35 @@ public class MoteurJeu {
     EtatMouvement etat =
         client.makeMove(variables.getIdPartie(), variables.getIdEquipe(), prochainMouvement);
     variables.setMouvementNous(prochainMouvement);
-    
+
 
     switch (etat) {
       case OK:
         return true;
-        
+
       case NOTYET:
         LOG.info(" --> Pas encore notre tour");
         return true;
-        
+
       case FORBIDDEN:
         LOG.info(" --> Mouvement interdit:\t\t{}", prochainMouvement);
         return false;
-        
+
       case GAMEOVER:
         LOG.info(" --> Défaite sur mouvement:\t\t{}", prochainMouvement);
         return false;
     }
-    
-    //Retourne Ok par défaut, évite de planter le jeu si jamais il y a un bug ici
+
+    // Retourne Ok par défaut, évite de planter le jeu si jamais il y a un bug ici
     return true;
 
   }
+
   private void updatePlateau() {
-    Plateau plateau = client.getBoard(variables.getIdPartie());
+    Plateau plateau = client.getBoard(variables.getIdPartie(), variables.getIdEquipe());
 
     variables.setPlateau(plateau);
-    
+
     Mouvement mouvementAdversaire =
         client.getLastMovement(variables.getIdPartie(), variables.getIdEquipe());
     variables.setMouvementAdversaire(mouvementAdversaire);

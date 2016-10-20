@@ -2,7 +2,7 @@ package com.github._64q.codeandplay2016.model;
 
 /**
  * Variables du moteur de jeu
- * 
+ *
  * @author qlebourgeois &lt;contact@qlebourgeois.me&gt;
  */
 public class VariablesMoteur {
@@ -19,7 +19,7 @@ public class VariablesMoteur {
    * Dernier mouvement renvoyé par l'API (celui de l'adversaire)
    */
   private Mouvement mouvementAdversaire;
-  
+
   private Mouvement mouvementNous;
 
   public String getNomEquipe() {
@@ -58,8 +58,8 @@ public class VariablesMoteur {
     return this.mouvementAdversaire;
   }
 
-  public void setMouvementAdversaire(Mouvement mouvementAdversaire) {
-    this.mouvementAdversaire = mouvementAdversaire;
+  public void setMouvementAdversaire(Mouvement mouvementAdversaire2) {
+    this.mouvementAdversaire = mouvementAdversaire2;
   }
 
   public Mouvement getMouvementNous() {
@@ -72,18 +72,22 @@ public class VariablesMoteur {
 
 
   public Joueur getNous() {
-    if (getNomEquipe().equals(getPlateau().getPlayer1().getName())) {
-      return getPlateau().getPlayer1();
+    if (getPlateau().getPlayerBoards().get(0).getPlayerId().equals("0")) {
+      return getPlateau().getPlayerBoards().get(0);
     }
 
-    return getPlateau().getPlayer2();
+    return getPlateau().getPlayerBoards().get(1);
   }
 
   public Joueur getAdversaire() {
-    if (!getNomEquipe().equals(getPlateau().getPlayer1().getName())) {
-      return getPlateau().getPlayer1();
+    if (!getPlateau().getPlayerBoards().get(0).getPlayerId().equals("0")) {
+      return getPlateau().getPlayerBoards().get(0);
     }
 
-    return getPlateau().getPlayer2();
+    return getPlateau().getPlayerBoards().get(1);
+  }
+
+  public int getTour() {
+    return 53 - getPlateau().getNbrTurnsLeft() + 1;
   }
 }

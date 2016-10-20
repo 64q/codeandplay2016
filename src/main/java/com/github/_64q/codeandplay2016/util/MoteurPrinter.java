@@ -1,6 +1,5 @@
 package com.github._64q.codeandplay2016.util;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +11,7 @@ import com.github._64q.codeandplay2016.service.MoteurJeu;
 
 /**
  * Utilitaire d'affichage pour le moteur de jeu
- * 
+ *
  * @author qlebourgeois &lt;contact@qlebourgeois.me&gt;
  */
 public class MoteurPrinter {
@@ -27,7 +26,7 @@ public class MoteurPrinter {
 
   public static void printNouveauTour(VariablesMoteur variables) {
     LOG.info("----------------------------------- Tour {} -----------------------------------",
-        MoteurJeu.NB_TOURS_MAX - variables.getPlateau().getNbrActionLeft());
+        MoteurJeu.NB_TOURS_MAX - variables.getPlateau().getNbrTurnsLeft());
   }
 
   public static void printMouvementAdversaire(VariablesMoteur variables) {
@@ -37,21 +36,14 @@ public class MoteurPrinter {
   public static void printPlateau(VariablesMoteur variables) {
     Plateau plateau = variables.getPlateau();
 
-    //LOG.info("+------------------------------ Plateau --------------------------------------+");
-    if(variables.getNous() == variables.getPlateau().getPlayer1()) {
-      printPlayer(variables.getNous(), variables.getMouvementNous());
-      printPlayer(variables.getAdversaire(), variables.getMouvementAdversaire());
-    } else {
-      printPlayer(variables.getAdversaire(), variables.getMouvementAdversaire());
-      printPlayer(variables.getNous(), variables.getMouvementNous());
-    }
-    LOG.info("| Nombre de tours restants:\t{}", plateau.getNbrActionLeft());
+    printPlayer(variables.getAdversaire(), variables.getMouvementAdversaire());
+    printPlayer(variables.getNous(), variables.getMouvementNous());
+
+    LOG.info("| Nombre de tours restants:\t{}", plateau.getNbrTurnsLeft());
     LOG.info("+-----------------------------------------------------------------------------+");
   }
 
   private static void printPlayer(Joueur player, Mouvement mouvement) {
-    LOG.info("| Joueur {} :\tPV:{},\tBalles:{},\tShields:{},\tFocus:{},\tBomb:{}   <= {}",
-        StringUtils.substring(player.getName(), 0, 4), player.getHealth(), player.getBullet(),
-        player.getShield(), player.isFocused(), player.getBomb(), mouvement);
+    LOG.info("| Joueur {}", player, mouvement);
   }
 }

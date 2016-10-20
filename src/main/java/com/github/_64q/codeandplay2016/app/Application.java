@@ -11,7 +11,7 @@ import com.github._64q.codeandplay2016.service.RestClient;
 
 /**
  * Application principale
- * 
+ *
  * @author qlebourgeois &lt;contact@qlebourgeois.me&gt;
  */
 public class Application {
@@ -21,17 +21,17 @@ public class Application {
 
   // --- Paramètres serveur
 
-  public static final String API_URL = "http://www.codeandplay.date/battle-ws";
+  public static final String API_URL = "http://evenement.codeandplay.date/epic-ws";
 
   // --- Paramètres de partie
 
-  public static final String NOM_EQUIPE = "O(k)";
+  public static final String NOM_EQUIPE = "ok";
 
-  public static final String MOT_DE_PASSE = "TEsOk!TEsBath!TEsIN!";
+  public static final String MOT_DE_PASSE = "ok";
 
   public static final ModeJeu MODE = ModeJeu.PRACTICE;
 
-  public static final int LEVEL = 5;
+  public static final int LEVEL = 4;
 
   // --- Contexte spring
 
@@ -39,7 +39,7 @@ public class Application {
 
   /**
    * Point d'entrée du bot de la battle code
-   * 
+   *
    * @param args pas d'arguments à renseigner
    */
   public static void main(String[] args) {
@@ -78,7 +78,7 @@ public class Application {
 
   /**
    * Initialise le moteur de jeu
-   * 
+   *
    * @return le {@link MoteurJeu}
    */
   private static MoteurJeu initializeMoteur() {

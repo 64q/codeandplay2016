@@ -7,14 +7,14 @@ import com.github._64q.codeandplay2016.model.VariablesMoteur;
 
 /**
  * Interface d'intelligence artificelle à implémenter
- * 
+ *
  * @author qlebourgeois &lt;contact@qlebourgeois.me&gt;
  */
 @Component
 public interface IntelligenceArtificielle {
   /**
    * Joue le prochain coup
-   * 
+   *
    * @param variables etat du moteur
    * @return le mouvement à jouer
    */

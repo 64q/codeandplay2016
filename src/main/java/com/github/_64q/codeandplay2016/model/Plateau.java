@@ -1,33 +1,37 @@
 package com.github._64q.codeandplay2016.model;
 
+import java.util.List;
+
 public class Plateau {
-  private int nbrActionLeft;
+  private int nbrTurnsLeft;
 
-  private Joueur player1;
+  private String playerMoves;
 
-  private Joueur player2;
+  private List<Joueur> playerBoards;
 
-  public int getNbrActionLeft() {
-    return nbrActionLeft;
+  public int getNbrTurnsLeft() {
+    return nbrTurnsLeft;
   }
 
-  public void setNbrActionLeft(int nbrActionLeft) {
-    this.nbrActionLeft = nbrActionLeft;
+  public void setNbrTurnsLeft(int nbrActionLeft) {
+    this.nbrTurnsLeft = nbrActionLeft;
   }
 
-  public Joueur getPlayer1() {
-    return player1;
+  public String getPlayerMoves() {
+    return playerMoves;
   }
 
-  public void setPlayer1(Joueur player1) {
-    this.player1 = player1;
+  public void setPlayerMoves(String playerMoves) {
+    this.playerMoves = playerMoves;
   }
 
-  public Joueur getPlayer2() {
-    return player2;
+  public List<Joueur> getPlayerBoards() {
+    return playerBoards;
   }
 
-  public void setPlayer2(Joueur player2) {
-    this.player2 = player2;
+  public void setPlayerBoards(List<Joueur> playerBoards) {
+    this.playerBoards = playerBoards;
   }
+
+
 }

@@ -1,79 +1,51 @@
 package com.github._64q.codeandplay2016.model;
 
+import java.util.List;
+
+import com.google.common.collect.Lists;
+
 /**
  * Représente un joueur
- * 
+ *
  * @author qlebourgeois &lt;contact@qlebourgeois.me&gt;
  */
 public class Joueur {
 
-  private String name;
-  private int health;
-  private int bullet;
-  private int shield;
-  private int bomb;
-  private boolean focused;
-  private int cumulatedCovers;
+  private String playerId;
 
-  public String getName() {
-    return name;
+  private String playerName;
+
+  private List<Fighters> fighters = Lists.newArrayList();
+
+  public String getPlayerId() {
+    return playerId;
   }
 
-  public void setName(String nom) {
-    this.name = nom;
+  public void setPlayerId(String playerId) {
+    this.playerId = playerId;
   }
 
-  public int getHealth() {
-    return health;
+  public String getPlayerName() {
+    return playerName;
   }
 
-  public void setHealth(int health) {
-    this.health = health;
+  public void setPlayerName(String playerName) {
+    this.playerName = playerName;
   }
 
-  public int getBullet() {
-    return bullet;
+  public List<Fighters> getFighters() {
+    return fighters;
   }
 
-  public void setBullet(int bullet) {
-    this.bullet = bullet;
-  }
-
-  public int getShield() {
-    return shield;
-  }
-
-  public void setShield(int shield) {
-    this.shield = shield;
-  }
-
-  public boolean isFocused() {
-    return focused;
-  }
-
-  public void setFocused(boolean focused) {
-    this.focused = focused;
-  }
-
-  public int getBomb() {
-    return this.bomb;
-  }
-
-  public void setBomb(int bomb) {
-    this.bomb = bomb;
-  }
-  
-  public int getCumulatedCovers() {
-    return this.cumulatedCovers;
-  }
-
-  public void setCumulatedCovers(int cumulatedCovers) {
-    this.cumulatedCovers = cumulatedCovers;
+  public void setFighters(List<Fighters> fighters) {
+    this.fighters = fighters;
   }
 
   @Override
   public String toString() {
-    return "Player [name=" + name + ", health=" + health + ", bullet=" + bullet + ", shield="
-        + shield + ", focused=" + focused + "]";
+    return "[playerName=" + playerName + ", fighters=" + fighters + "]";
   }
+
+
+
 }
