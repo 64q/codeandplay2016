@@ -90,8 +90,6 @@ public class MoteurJeu {
    * @param level
    */
   public void runPractice(int level) {
-    Assert.isTrue(level > 0 && level < 7, "Le niveau de jeu doit être compris entre 1 et 6");
-
     String idPartie = client.newPractice(String.valueOf(level), variables.getIdEquipe());
 
     if (idPartie == null || "NA".equals(idPartie)) {

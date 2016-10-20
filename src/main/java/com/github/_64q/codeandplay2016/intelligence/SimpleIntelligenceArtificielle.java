@@ -58,7 +58,7 @@ public class SimpleIntelligenceArtificielle implements IntelligenceArtificielle 
     mouvement.setTypeAction(TypeAction.CHOIX);
 
     if (variables.getTour() == 1) {
-      mouvement.setSelection(FighterClass.CHAMAN);
+      mouvement.setSelection(FighterClass.ARCHER);
     } else if (variables.getTour() == 2) {
       mouvement.setSelection(FighterClass.PALADIN);
     } else if (variables.getTour() == 3) {
@@ -100,8 +100,47 @@ public class SimpleIntelligenceArtificielle implements IntelligenceArtificielle 
           "A" + fighters.getOrderNumberInTeam());
     }
 
-    return new FighterMouvement("A" + fighters.getOrderNumberInTeam(), TypeMouvement.ATTACK,
-        getCible(variables));
+    if (fighters.getFighterClass().equals(FighterClass.PALADIN)) {
+      return mvtPaladin(variables, fighters);
+    } else if (fighters.getFighterClass().equals(FighterClass.ORC)) {
+      return mvtOrc(variables, fighters);
+    } else if (fighters.getFighterClass().equals(FighterClass.ARCHER)) {
+      return mvtArcher(variables, fighters);
+    } else {
+      return new FighterMouvement("A" + fighters.getOrderNumberInTeam(), TypeMouvement.ATTACK,
+          getCible(variables));
+    }
+  }
+
+  private FighterMouvement mvtArcher(VariablesMoteur variables, Fighters fighters) {
+    if (fighters.getCurrentMana() >= 2) {
+      return new FighterMouvement("A" + fighters.getOrderNumberInTeam(), TypeMouvement.FIREBOLT,
+          getCible(variables));
+    } else {
+      return new FighterMouvement("A" + fighters.getOrderNumberInTeam(), TypeMouvement.REST,
+          "A" + fighters.getOrderNumberInTeam());
+    }
+  }
+
+  private FighterMouvement mvtOrc(VariablesMoteur variables, Fighters fighters) {
+    if (fighters.getCurrentMana() >= 2) {
+      return new FighterMouvement("A" + fighters.getOrderNumberInTeam(), TypeMouvement.YELL,
+          getCible(variables));
+    } else {
+      return new FighterMouvement("A" + fighters.getOrderNumberInTeam(), TypeMouvement.REST,
+          "A" + fighters.getOrderNumberInTeam());
+    }
+  }
+
+  private FighterMouvement mvtPaladin(VariablesMoteur variables, Fighters fighters) {
+    if (fighters.getCurrentMana() >= 2) {
+      return new FighterMouvement("A" + fighters.getOrderNumberInTeam(), TypeMouvement.CHARGE,
+          getCible(variables));
+    } else {
+      return new FighterMouvement("A" + fighters.getOrderNumberInTeam(), TypeMouvement.REST,
+          "A" + fighters.getOrderNumberInTeam());
+    }
+
   }
 
   private String getCible(VariablesMoteur variables) {
@@ -109,7 +148,7 @@ public class SimpleIntelligenceArtificielle implements IntelligenceArtificielle 
 
       @Override
       public int compare(Fighters o1, Fighters o2) {
-        if (o1.getCurrentLife() > o1.getCurrentLife()) {
+        if (o1.getCurrentLife() < o1.getCurrentLife()) {
           return -1;
         } else if (o1.getCurrentLife() == o1.getCurrentLife()) {
           return 0;

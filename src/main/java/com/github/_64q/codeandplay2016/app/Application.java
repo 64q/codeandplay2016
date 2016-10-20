@@ -29,9 +29,9 @@ public class Application {
 
   public static final String MOT_DE_PASSE = "ok";
 
-  public static final ModeJeu MODE = ModeJeu.PRACTICE;
+  public static final ModeJeu MODE = ModeJeu.VERSUS;
 
-  public static final int LEVEL = 4;
+  public static final int LEVEL = 7;
 
   // --- Contexte spring
 
