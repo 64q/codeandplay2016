@@ -17,28 +17,13 @@ public class SimpleIntelligenceArtificielle implements IntelligenceArtificielle 
   private Mouvement dernierMouvement;
   private Mouvement avantDernierMouvement;
 
-  private Joueur getNous(VariablesMoteur variables) {
-    if (variables.getNomEquipe().equals(variables.getPlateau().getPlayer1().getName())) {
-      return variables.getPlateau().getPlayer1();
-    }
-
-    return variables.getPlateau().getPlayer2();
-  }
-
-  private Joueur getAdversaire(VariablesMoteur variables) {
-    if (!variables.getNomEquipe().equals(variables.getPlateau().getPlayer1().getName())) {
-      return variables.getPlateau().getPlayer1();
-    }
-
-    return variables.getPlateau().getPlayer2();
-  }
 
   @Override
   public Mouvement makeMove(VariablesMoteur variables) {
     Mouvement mouvement = Mouvement.SHOOT;
 
-    Joueur nous = getNous(variables);
-    Joueur adversaire = getAdversaire(variables);
+    Joueur nous = variables.getNous();
+    Joueur adversaire = variables.getAdversaire();
 
     dernierMouvement = variables.getMouvementAdversaire();
 
