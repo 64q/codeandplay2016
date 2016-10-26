@@ -15,6 +15,8 @@ public class VariablesMoteur {
    */
   private Plateau plateau;
 
+  private Plateau oldPlateau;
+
   /**
    * Dernier mouvement renvoyé par l'API (celui de l'adversaire)
    */
@@ -72,7 +74,7 @@ public class VariablesMoteur {
 
 
   public Joueur getNous() {
-    if (getPlateau().getPlayerBoards().get(0).getPlayerId().equals("0")) {
+    if (getPlateau().getPlayerBoards().get(0).getPlayerName().equals(nomEquipe)) {
       return getPlateau().getPlayerBoards().get(0);
     }
 
@@ -80,7 +82,7 @@ public class VariablesMoteur {
   }
 
   public Joueur getAdversaire() {
-    if (!getPlateau().getPlayerBoards().get(0).getPlayerId().equals("0")) {
+    if (!getPlateau().getPlayerBoards().get(0).getPlayerName().equals(nomEquipe)) {
       return getPlateau().getPlayerBoards().get(0);
     }
 
@@ -90,4 +92,22 @@ public class VariablesMoteur {
   public int getTour() {
     return 53 - getPlateau().getNbrTurnsLeft() + 1;
   }
+
+  public Plateau getOldPlateau() {
+    return oldPlateau;
+  }
+
+  public void setOldPlateau(Plateau oldPlateau) {
+    this.oldPlateau = oldPlateau;
+  }
+
+  public Joueur getOldNous() {
+    if (oldPlateau.getPlayerBoards().get(0).getPlayerName().equals(nomEquipe)) {
+      return oldPlateau.getPlayerBoards().get(0);
+    }
+
+    return oldPlateau.getPlayerBoards().get(1);
+  }
+
+
 }

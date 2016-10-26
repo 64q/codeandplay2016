@@ -31,7 +31,7 @@ public class Application {
 
   public static final ModeJeu MODE = ModeJeu.VERSUS;
 
-  public static final int LEVEL = 7;
+  public static final int LEVEL = 30;
 
   // --- Contexte spring
 
